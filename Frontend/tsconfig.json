@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es2016",                                  /* JavaScript compatible */
+    "module": "esnext",                                  /* Usa ESNext para módulos, ideal para frontend */
+    "jsx": "react",                                      /* Soporte para JSX, si estás usando React */
+    "rootDir": "./src",                                  /* Carpeta con tus archivos fuente TypeScript */
+    "outDir": "./dist",                                  /* Carpeta donde se colocarán los archivos JavaScript compilados */
+    "strict": true,                                      /* Activa las comprobaciones estrictas */
+    "esModuleInterop": true,                             /* Interoperabilidad con CommonJS */
+    "skipLibCheck": true,                                /* Ignora revisiones en los archivos de declaración */
+    "forceConsistentCasingInFileNames": true             /* Asegura consistencia en nombres de archivos */
+  },
+  "include": ["src/**/*"],                               /* Incluye todos los archivos dentro de la carpeta src */
+  "exclude": ["node_modules"]                            /* Excluye la carpeta node_modules */
+}

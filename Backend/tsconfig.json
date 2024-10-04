@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es2016",                                  /* Lenguaje de JavaScript que quieres emitir */
+    "module": "commonjs",                                /* Módulo que quieres utilizar, compatible con Node.js */
+    "rootDir": "./src",                                  /* Directorio donde se encuentran los archivos fuente TypeScript */
+    "outDir": "./dist",                                  /* Directorio donde se colocarán los archivos JavaScript compilados */
+    "strict": true,                                      /* Activa todas las comprobaciones estrictas */
+    "esModuleInterop": true,                             /* Ayuda a interoperar con módulos CommonJS */
+    "forceConsistentCasingInFileNames": true,            /* Asegura que los nombres de archivo sean coherentes en mayúsculas/minúsculas */
+    "skipLibCheck": true                                 /* No revisa archivos de declaración (.d.ts) */
+  },
+  "include": ["src/**/*"],                               /* Incluye todos los archivos dentro de la carpeta src */
+  "exclude": ["node_modules"]                            /* Excluye la carpeta node_modules */
+}
