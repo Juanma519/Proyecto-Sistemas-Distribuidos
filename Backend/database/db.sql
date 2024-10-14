@@ -1,0 +1,20 @@
+CREATE DATABASE prueba if not exists;
+
+CREATE TABLE clientes(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    mail VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+)
+
+CREATE TABLE psicologos(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(20) NOT NULL UNIQUE,
+    mail VARCHAR(30) NOT NULL UNIQUE,
+    password VARCHAR(30) NOT NULL,
+    nombre VARCHAR(30) NOT NULL,
+    apellido VARCHAR(30) NOT NULL,
+    telefono VARCHAR(10) NOT NULL,
+    especialidad VARCHAR(30) NOT NULL,
+    ubicacion VARCHAR(30) NOT NULL
+)
