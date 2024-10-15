@@ -14,7 +14,7 @@ export type Especialidad = 'Duelos' | 'Traumas' | 'Familiar' | 'Pareja' | 'Separ
 export type Psicologo = User & {
     nombre: string,
     apellido: string,
-    telefono: number,
+    telefono: string,
     especialidad: Especialidad,
     ubicacion: string
 }

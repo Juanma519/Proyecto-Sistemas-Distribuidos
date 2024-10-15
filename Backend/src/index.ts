@@ -2,6 +2,7 @@ import dotenv from 'dotenv'
 import express from 'express'
 import {Psicologo, User} from './tipos/tipos'
 import indexRoutes from './rutas/index'
+import { pruebaPsicologo, validacionpruebapsicologo } from './prueba';
 
 
 dotenv.config();
