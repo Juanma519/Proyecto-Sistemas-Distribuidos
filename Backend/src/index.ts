@@ -16,5 +16,5 @@ app.listen(PORT, () => {
     console.log(`Example app listening on port http://localhost:${PORT}`)
 })
 
-//para runear primero hay que hace npm run build y luego npm start
-//o en vez de npm start, npm run dev 
+//para ejecutar docker : docker-compose up --build
+

@@ -1,0 +1,26 @@
+# docker-compose.yml
+services:
+  database:
+    image: postgres:14
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: usuario
+      POSTGRES_PASSWORD: juancito
+      POSTGRES_DB: MentalNow
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/postgresql/data
+
+    ports:
+      - "5432:5432"
+
+  api:
+    build: ./
+    container_name: backend 
+    depends_on:
+      - database
+    ports:
+      - "5000:5000"
+
+volumes:
+  db_data:

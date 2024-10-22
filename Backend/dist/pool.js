@@ -12,5 +12,5 @@ exports.pool = new pg_1.Pool({
     host: process.env.DB_HOST,
     database: process.env.DB_DATABASE,
     password: process.env.DB_PASSWORD,
-    port: 5433, //esto hay q arreglarlo dsp
+    port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : undefined, //esto hay q arreglarlo dsp
 });

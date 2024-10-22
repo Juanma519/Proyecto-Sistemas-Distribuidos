@@ -36,3 +36,16 @@ export const verificarPsicologo = async (req: Request, res: Response) => {
         res.status(500).send("Error al verificar psicologo");
     }
 }
+
+export const updatePsicologo = async (req: Request, res: Response) => {
+    const { username, password, mail, nombre, apellido, telefono, especialidad, ubicacion } = req.body;
+    try {
+        const response = await pool.query("UPDATE psicologos SET password = $2, mail = $3, nombre = $4, apellido = $5, telefono = $6, especialidad = $7, ubicacion = $8 WHERE username = $1", [username, password, mail, nombre, apellido, telefono, especialidad, ubicacion]
+        );
+        console.log(response.rows);
+        res.status(200).send("Psicologo actualizado");
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error al actualizar psicologo");
+    }
+}

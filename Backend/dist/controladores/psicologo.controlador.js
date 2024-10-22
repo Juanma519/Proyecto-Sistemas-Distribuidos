@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verificarPsicologo = exports.crearPsicologo = void 0;
+exports.updatePsicologo = exports.verificarPsicologo = exports.crearPsicologo = void 0;
 const pool_1 = require("../pool");
 const query1 = `INSERT into psicologos 
     (username, password, mail, nombre, apellido, telefono, especialidad, ubicacion) 
@@ -45,3 +45,16 @@ const verificarPsicologo = (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.verificarPsicologo = verificarPsicologo;
+const updatePsicologo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { username, password, mail, nombre, apellido, telefono, especialidad, ubicacion } = req.body;
+    try {
+        const response = yield pool_1.pool.query("UPDATE psicologos SET password = $2, mail = $3, nombre = $4, apellido = $5, telefono = $6, especialidad = $7, ubicacion = $8 WHERE username = $1", [username, password, mail, nombre, apellido, telefono, especialidad, ubicacion]);
+        console.log(response.rows);
+        res.status(200).send("Psicologo actualizado");
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send("Error al actualizar psicologo");
+    }
+});
+exports.updatePsicologo = updatePsicologo;

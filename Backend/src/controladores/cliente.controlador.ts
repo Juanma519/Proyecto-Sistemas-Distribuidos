@@ -14,7 +14,7 @@ export const crearCliente = async (req: Request, res: Response) => {
         res.status(200).send("Usuario creado");
     } catch (error) {
         console.log(error);
-        res.status(500).send("Error al crear usuario");
+        res.status(500).send(error);
     }
 }
 const query2 = "SELECT * FROM clientes WHERE username = $1 AND password = $2";
