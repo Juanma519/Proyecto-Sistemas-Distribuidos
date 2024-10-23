@@ -2,13 +2,18 @@ FROM node:20.18.0
 
 WORKDIR /app
 
-COPY . /app
-RUN apt-get update && apt-get install -y postgresql-client
+COPY package*.json ./
 
 RUN npm install
 
+RUN npm install -g typescript
 
+COPY . .
 
-CMD ["npm", "start"]
+RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/apt/lists/*
+
+RUN npm run build
 
 EXPOSE 5000
+
+CMD ["npm", "start"]
