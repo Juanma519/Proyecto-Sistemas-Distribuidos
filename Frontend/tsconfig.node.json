@@ -33,5 +33,5 @@
 },
   "include": [
     "../../../Downloads/sb1-zdksai/vite.config.ts"
-  ]
+]
 }

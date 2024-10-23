@@ -7,10 +7,43 @@ const Register: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle registration logic here
-    console.log('Registration submitted', { name, email, password, confirmPassword });
+
+    // Verifica que las contraseñas coincidan
+    if (password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
+    // Crea el payload para enviar al backend
+    const payload = {
+      username: name,
+      password: password,
+      mail: email,
+    };
+
+    try {
+      // Realiza la solicitud al backend
+      const response = await fetch('http://localhost:5000/crearCliente', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.text();
+
+      if (response.ok) {
+        alert('Usuario creado con éxito');
+      } else {
+        alert(`Error: ${data}`);
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+      alert('Error al conectarse al servidor');
+    }
   };
 
   return (

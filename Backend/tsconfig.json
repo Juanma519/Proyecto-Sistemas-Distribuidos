@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "moduleResolution": "node",
     "target": "es2016",                                  /* Lenguaje de JavaScript que quieres emitir */
     "module": "commonjs",                                /* Módulo que quieres utilizar, compatible con Node.js */
     "rootDir": "./src",                                  /* Directorio donde se encuentran los archivos fuente TypeScript */
