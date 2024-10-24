@@ -2,7 +2,7 @@ import {pool} from "../pool";
 import { Request, Response } from "express";
 import { User } from "../tipos/tipos";
 import { QueryResult } from "pg";
-//habria que laburarle el tipado
+
 export const crearCliente = async (req: Request, res: Response) => {
     const { username, password, mail } = req.body;
     try {
@@ -11,7 +11,10 @@ export const crearCliente = async (req: Request, res: Response) => {
             [username, password, mail]
         );
         console.log(response.rows);
-        res.status(200).send("Usuario creado");
+        res.status(200).json({
+            "message":"Usuario creado",
+            "body":response.rows[0]
+        })
     } catch (error) {
         console.log(error);
         res.status(500).send(error);
@@ -25,7 +28,10 @@ export const verificarCliente = async (req: Request, res: Response) => {
         const response = await pool.query(query2, [username, password]
         );
         if (response.rows.length == 1) {
-            res.status(200).send("Cliente validado");
+            res.status(200).json({
+                "message":"Usuario validado",
+                "body":response.rows[0]
+            })
         } else{
             res.status(404).send("Usuario no encontrado o contraseña incorrecta");
         }

@@ -29,7 +29,11 @@ export const verificarPsicologo = async (req: Request, res: Response) => {
             res.status(404).send("Psicologo no encontrado o contraseña incorrecta");
         }
         else{    
-            res.status(200).send("Psicologo validado"); 
+            res.status(200).json({
+            "message":"Psicologo validado",
+            "body":response.rows[0]
+                
+        }); 
         }
     } catch (error) {
         console.log(error);
@@ -49,3 +53,5 @@ export const updatePsicologo = async (req: Request, res: Response) => {
         res.status(500).send("Error al actualizar psicologo");
     }
 }
+export const filtrarPsicologo = async (req: Request, res: Response) => 
+{}    
