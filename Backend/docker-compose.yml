@@ -1,0 +1,30 @@
+# docker-compose.yml
+version: '3.8'
+services:
+  database:
+    image: postgres:latest
+    container_name: postgres_container
+    environment:
+      POSTGRES_USER: usuario
+      POSTGRES_PASSWORD: juancito
+      POSTGRES_DB: MentalNow
+    ports:
+      - 5432:5432
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    container_name: backend
+    environment:
+      DB_NAME: MentalNow
+      DB_USER: usuario
+      DB_PASSWORD: juancito
+      DB_HOST: database
+      DB_PORT: 5432
+      PORT: 5000
+    ports:
+      - 5000:5000
+volumes:
+  db_data:
