@@ -11,17 +11,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.verificarCliente = exports.crearCliente = void 0;
 const pool_1 = require("../pool");
-//habria que laburarle el tipado
 const crearCliente = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password, mail } = req.body;
     try {
         const response = yield pool_1.pool.query("INSERT INTO clientes (username, password, mail) VALUES ($1, $2, $3)", [username, password, mail]);
         console.log(response.rows);
-        res.status(200).send("Usuario creado");
+        res.status(200).json({
+            "message": "Usuario creado",
+            "body": response.rows[0]
+        });
     }
     catch (error) {
         console.log(error);
-        res.status(500).send("Error al crear usuario");
+        res.status(500).send(error);
     }
 });
 exports.crearCliente = crearCliente;
@@ -31,7 +33,10 @@ const verificarCliente = (req, res) => __awaiter(void 0, void 0, void 0, functio
     try {
         const response = yield pool_1.pool.query(query2, [username, password]);
         if (response.rows.length == 1) {
-            res.status(200).send("Cliente validado");
+            res.status(200).json({
+                "message": "Usuario validado",
+                "body": response.rows[0]
+            });
         }
         else {
             res.status(404).send("Usuario no encontrado o contraseña incorrecta");

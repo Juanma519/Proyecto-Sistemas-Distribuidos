@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatePsicologo = exports.verificarPsicologo = exports.crearPsicologo = void 0;
+exports.filtrarPsicologo = exports.updatePsicologo = exports.verificarPsicologo = exports.crearPsicologo = void 0;
 const pool_1 = require("../pool");
 const query1 = `INSERT into psicologos 
     (username, password, mail, nombre, apellido, telefono, especialidad, ubicacion) 
@@ -36,7 +36,10 @@ const verificarPsicologo = (req, res) => __awaiter(void 0, void 0, void 0, funct
             res.status(404).send("Psicologo no encontrado o contraseña incorrecta");
         }
         else {
-            res.status(200).send("Psicologo validado");
+            res.status(200).json({
+                "message": "Psicologo validado",
+                "body": response.rows[0]
+            });
         }
     }
     catch (error) {
@@ -58,3 +61,5 @@ const updatePsicologo = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.updatePsicologo = updatePsicologo;
+const filtrarPsicologo = (req, res) => __awaiter(void 0, void 0, void 0, function* () { });
+exports.filtrarPsicologo = filtrarPsicologo;
