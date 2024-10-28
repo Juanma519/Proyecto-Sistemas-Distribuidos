@@ -5,7 +5,10 @@ import { QueryResult } from "pg";
 
 export const crearCliente = async (req: Request, res: Response) => {
     const { username, password, mail } = req.body;
+    console.log("Datos recibidos:", req.body);  // Añadir este console.log para verificar
+
     try {
+
         const response = await pool.query(
             "INSERT INTO clientes (username, password, mail) VALUES ($1, $2, $3)",
             [username, password, mail]

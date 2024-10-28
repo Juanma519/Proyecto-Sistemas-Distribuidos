@@ -9,6 +9,7 @@ import TherapistDetails from './components/TherapistDetails';
 import ChatWithTherapist from './components/ChatWithTherapist';
 import Footer from './components/Footer';
 
+
 const App: React.FC = () => {
   return (
     <Router>
