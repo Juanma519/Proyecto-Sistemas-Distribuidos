@@ -10,7 +10,7 @@ const schema_1 = require("./graphql/schema");
 const express_graphql_1 = require("express-graphql"); // ES6
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.use(express_1.default.json());
 app.use(index_1.default);
 app.use('/graphql', (0, express_graphql_1.graphqlHTTP)({

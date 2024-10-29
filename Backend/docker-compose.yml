@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: juancito
       POSTGRES_DB: MentalNow
     ports:
-      - 5432:5432
+      - 9777:5432
     volumes:
       - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
       - db_data:/var/lib/postgresql/data
@@ -23,8 +23,8 @@ services:
       DB_PASSWORD: juancito
       DB_HOST: database
       DB_PORT: 5432
-      PORT: 5000
+      PORT: 5001
     ports:
-      - 5000:5000
+      - 5001:5001
 volumes:
   db_data:

@@ -14,6 +14,6 @@ RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/ap
 
 RUN npm run build
 
-EXPOSE 5000
+EXPOSE 5001
 
 CMD ["npm", "start"]

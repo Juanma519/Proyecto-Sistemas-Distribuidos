@@ -25,3 +25,6 @@ CREATE TABLE psicologos (
 INSERT INTO clientes (username, mail, password) VALUES
 ('Joaquin Heredero', 'jheredero@example.com','1234'),
 ('Juan Lolo', 'Onetto@example.com', '1234');
+
+INSERT INTO psicologos (username, mail, password, nombre, apellido, telefono, especialidad, ubicacion) VALUES
+('JuanLolo', 'messi@gmail.com', '1234', 'Juan', 'Lolo', '1234567890', 'Pareja', 'CABA');
