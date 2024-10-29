@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { request, gql } from 'graphql-request';
 
 interface Psicologo {
@@ -25,17 +25,16 @@ interface PsicologoData {
 }
 
 const BuscarPsicologos: React.FC = () => {
+  const [especialidad, setEspecialidad] = useState('');
+  const [ubicacion, setUbicacion] = useState('');
   const [psicologos, setPsicologos] = useState<PsicologoData[]>([]);
 
-  // Endpoint con el puerto correcto
   const endpoint = 'http://localhost:5001/graphql';
 
   const fetchPsicologos = async () => {
-    console.log("Ejecutando fetchPsicologos..."); // Verifica si esta línea se muestra en la consola
-
     const query = gql`
-      query {
-        filtroPsicologo(especialidad: "Pareja", ubicacion: "CABA") {
+      query ($especialidad: String, $ubicacion: String!) {
+        filtroPsicologo(especialidad: $especialidad, ubicacion: $ubicacion) {
           username
           mail
           nombre
@@ -47,10 +46,14 @@ const BuscarPsicologos: React.FC = () => {
       }
     `;
 
-    try {
-      const data = await request<FiltroPsicologoResponse>(endpoint, query);
-      console.log("Datos recibidos:", data); // Muestra los datos recibidos en la consola
+    // Si la especialidad está en blanco, la enviamos como `null` para que no se aplique el filtro en el backend.
+    const variables = {
+      especialidad: especialidad || null,
+      ubicacion,
+    };
 
+    try {
+      const data = await request<FiltroPsicologoResponse>(endpoint, query, variables);
       const psicologosData: PsicologoData[] = data.filtroPsicologo.map((psicologo) => ({
         id: psicologo.username,
         name: `${psicologo.nombre} ${psicologo.apellido}`,
@@ -61,49 +64,47 @@ const BuscarPsicologos: React.FC = () => {
       }));
       setPsicologos(psicologosData);
     } catch (error) {
-      console.error('Error al obtener psicólogos:', error); // Muestra el error en caso de fallo
+      console.error('Error al obtener psicólogos:', error);
     }
   };
-
-  // Función de prueba de conexión para verificar la comunicación con el backend
-  const testConnection = async () => {
-    try {
-      const response = await fetch('http://localhost:5001/graphql', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: `
-            query {
-              filtroPsicologo(especialidad: "Pareja", ubicacion: "CABA") {
-                username
-                mail
-                nombre
-                apellido
-                telefono
-                especialidad
-                ubicacion
-              }
-            }
-          `
-        }),
-      });
-      const result = await response.json();
-      console.log("Respuesta de prueba de conexión:", result);
-    } catch (error) {
-      console.error("Error de conexión:", error);
-    }
-  };
-
-  // Llama a testConnection al montar el componente para verificar la conexión
-  useEffect(() => {
-    testConnection();
-  }, []);
 
   return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Sección de filtros */}
         <div className="my-6">
           <h2 className="text-2xl font-semibold mb-4">Buscar Psicólogos</h2>
+
+          {/* Selector de Especialidad */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Especialidad</label>
+            <select
+                value={especialidad}
+                onChange={(e) => setEspecialidad(e.target.value)}
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+            >
+              <option value="">-- Sin filtro de especialidad --</option> {/* Opción en blanco */}
+              <option value="Duelos">Duelos</option>
+              <option value="Traumas">Traumas</option>
+              <option value="Familiar">Familiar</option>
+              <option value="Pareja">Pareja</option>
+              <option value="Separación y Divorcio">Separación y Divorcio</option>
+              <option value="Infantil y Adolescente">Infantil y Adolescente</option>
+            </select>
+          </div>
+
+          {/* Campo de entrada para la ubicación */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Ubicación</label>
+            <input
+                type="text"
+                value={ubicacion}
+                onChange={(e) => setUbicacion(e.target.value)}
+                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                placeholder="Ingresa la ubicación"
+            />
+          </div>
+
+          {/* Botón de búsqueda */}
           <div className="mt-4">
             <button
                 onClick={fetchPsicologos}
