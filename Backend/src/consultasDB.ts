@@ -44,3 +44,37 @@ export const psicologosUbicacionEspecialidad = async (ubicacion: string, especia
     }));
     return psicologos
 }
+export const getPsicologoByUsername = async (username: string): Promise<Psicologo | null> => {
+    const result: QueryResult = await pool.query('SELECT * FROM psicologos WHERE username = $1', [username]);
+    if (result.rows.length > 0) {
+        const row = result.rows[0];
+        const psicologo: Psicologo = {
+            username: row.username,
+            password: row.password,
+            mail: row.mail,
+            nombre: row.nombre,
+            apellido: row.apellido,
+            telefono: row.telefono,
+            ubicacion: row.ubicacion,
+            especialidad: row.especialidad,
+        };
+        return psicologo;
+    } else {
+        return null;
+    }
+};
+
+
+export const obtenerTodosLosPsicologos = async (): Promise<Psicologo[]> => {
+    const result: QueryResult = await pool.query('SELECT * FROM psicologos');
+    return result.rows.map((row: any) => ({
+        username: row.username,
+        password: row.password,
+        mail: row.mail,
+        nombre: row.nombre,
+        apellido: row.apellido,
+        telefono: row.telefono,
+        ubicacion: row.ubicacion,
+        especialidad: row.especialidad,
+    }));
+};

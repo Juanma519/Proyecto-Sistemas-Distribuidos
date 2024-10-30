@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { request, gql } from 'graphql-request';
+import { Link } from 'react-router-dom';
 
 interface Psicologo {
   username: string;
@@ -46,7 +47,6 @@ const BuscarPsicologos: React.FC = () => {
       }
     `;
 
-    // Si la especialidad está en blanco, la enviamos como `null` para que no se aplique el filtro en el backend.
     const variables = {
       especialidad: especialidad || null,
       ubicacion,
@@ -55,13 +55,14 @@ const BuscarPsicologos: React.FC = () => {
     try {
       const data = await request<FiltroPsicologoResponse>(endpoint, query, variables);
       const psicologosData: PsicologoData[] = data.filtroPsicologo.map((psicologo) => ({
-        id: psicologo.username,
+        id: psicologo.username, // Usamos 'username' como identificador único
         name: `${psicologo.nombre} ${psicologo.apellido}`,
         especialidad: psicologo.especialidad,
         ubicacion: psicologo.ubicacion,
         telefono: psicologo.telefono,
         email: psicologo.mail,
       }));
+
       setPsicologos(psicologosData);
     } catch (error) {
       console.error('Error al obtener psicólogos:', error);
@@ -82,7 +83,7 @@ const BuscarPsicologos: React.FC = () => {
                 onChange={(e) => setEspecialidad(e.target.value)}
                 className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
             >
-              <option value="">-- Sin filtro de especialidad --</option> {/* Opción en blanco */}
+              <option value="">-- Sin filtro de especialidad --</option>
               <option value="Duelos">Duelos</option>
               <option value="Traumas">Traumas</option>
               <option value="Familiar">Familiar</option>
@@ -142,12 +143,23 @@ const BuscarPsicologos: React.FC = () => {
                             <strong>Especialidad:</strong> {psicologo.especialidad}
                           </p>
                         </div>
+                        {/* Botón Ver Perfil */}
+                        <div className="mt-4">
+                          <Link
+                              to={`/psicologo/${psicologo.id}`}
+                              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+                          >
+                            Ver Perfil
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </div>
               ))
           ) : (
-              <p className="text-gray-500">No se encontraron psicólogos para los filtros aplicados.</p>
+              <p className="text-gray-500">
+                No se encontraron psicólogos para los filtros aplicados.
+              </p>
           )}
         </div>
       </div>

@@ -8,26 +8,28 @@ import SearchTherapists from './components/SearchTherapists';
 import TherapistDetails from './components/TherapistDetails';
 import ChatWithTherapist from './components/ChatWithTherapist';
 import Footer from './components/Footer';
+import PsicologoPerfil from "./components/PsicologoPerfil.tsx";
 
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-100 flex flex-col">
-        <Header />
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/search" element={<SearchTherapists />} />
-            <Route path="/therapist/:id" element={<TherapistDetails />} />
-            <Route path="/chat/:id" element={<ChatWithTherapist />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+      <Router>
+        <div className="min-h-screen bg-gray-100 flex flex-col">
+          <Header />
+          <main className="flex-grow container mx-auto px-4 py-8">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/search" element={<SearchTherapists />} />
+              <Route path="/therapist/:id" element={<TherapistDetails />} />
+              <Route path="/psicologo/:id" element={<PsicologoPerfil />} />
+              <Route path="/chat/:id" element={<ChatWithTherapist />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </Router>
   );
 }
 
