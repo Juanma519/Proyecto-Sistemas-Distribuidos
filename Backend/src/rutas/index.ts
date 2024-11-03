@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { crearCliente, verificarCliente } from "../controladores/cliente.controlador";
-import { crearPsicologo , verificarPsicologo} from "../controladores/psicologo.controlador";
+import { crearCliente, verificarCliente, listarClientes} from "../controladores/cliente.controlador";
+import { crearPsicologo , verificarPsicologo, listarPsicologos} from "../controladores/psicologo.controlador";
+import { loginUsuario } from "../controladores/login.controlador";
 
 const router= Router();
 
@@ -9,6 +10,9 @@ router.get('/', (req, res) => {
     res.send('Hello World!')
 })
 router.post('/crearCliente', crearCliente);
-router.get('/verificarCliente', verificarCliente);
+router.post('/verificarCliente', verificarCliente);
 router.post('/crearPsicologo', crearPsicologo);
-router.get('/verificarPsicologo', verificarPsicologo);
+router.post('/verificarPsicologo', verificarPsicologo);
+router.post('/login', loginUsuario);
+router.get('/listarPsicologos', listarPsicologos);
+router.get('/listarClientes', listarClientes);

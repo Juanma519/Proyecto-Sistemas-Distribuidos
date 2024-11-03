@@ -150,13 +150,13 @@ const Register: React.FC = () => {
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="email"
             >
-              Correo Electrónico
+              E-mail
             </label>
             <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="email"
                 type="email"
-                placeholder="Correo Electrónico"
+                placeholder="E-mail"
                 value={formData.email}
                 onChange={handleInputChange}
                 required

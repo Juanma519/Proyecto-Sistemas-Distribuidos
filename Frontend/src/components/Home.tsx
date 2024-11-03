@@ -8,7 +8,7 @@ import Updates from './Updates';
 const Home: React.FC = () => {
   return (
     <>
-      <h1 className="text-4xl font-bold text-gray-800 mb-8">Take control of your mental well-being.</h1>
+      <h1 className="text-4xl font-bold text-gray-800 mb-8">Tome control de su bienestar mental</h1>
       <SearchBar />
       <CategoryButtons />
       <TopTherapists />
