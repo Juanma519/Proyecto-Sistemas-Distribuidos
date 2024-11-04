@@ -4,34 +4,34 @@ const updates = [
   {
     image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
     title: 'Mindful Journeys Newsletter',
-    action: 'Subscribe',
+    action: 'Subscribirse',
   },
   {
     image: 'https://images.unsplash.com/photo-1560421683-6856ea585c78?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
     title: 'Accessibility Features',
-    action: 'Explore',
+    action: 'Explorar',
   },
   {
     image: 'https://images.unsplash.com/photo-1517021897933-0e0319cfbc28?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
     title: 'Relaxing Beats Playlist',
-    action: 'Listen',
+    action: 'Escuchar',
   },
   {
     image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
     title: 'Nature Sounds Playlist',
-    action: 'Listen',
+    action: 'Escuchar',
   },
   {
     image: 'https://images.unsplash.com/photo-1528716321680-815a8cdb8cbe?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80',
     title: 'Art Therapy Resources',
-    action: 'Discover',
+    action: 'Descubrir',
   },
 ];
 
 const Updates: React.FC = () => {
   return (
     <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-4">Follow us for Updates</h2>
+      <h2 className="text-2xl font-bold mb-4">Síguenos para mayor novedades</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
         {updates.map((update, index) => (
           <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">

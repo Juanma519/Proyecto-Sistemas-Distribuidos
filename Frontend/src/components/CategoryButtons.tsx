@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heart, Users, Star, Filter, Meh, AlertCircle, Scissors, Smile } from 'lucide-react';
+import { Heart, Users, Filter, Meh, AlertCircle, Scissors, Smile } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const categories = [
@@ -9,8 +9,7 @@ const categories = [
   { icon: Heart, label: 'Pareja' },
   { icon: Scissors, label: 'Separación y Divorcio' },
   { icon: Smile, label: 'Infantil y Adolescentes' },
-  { icon: Star, label: 'Reviews' },
-  { icon: Filter, label: 'Filters', link: '/search' }, // Añadido link para Filters
+  { icon: Filter, label: 'Filtros', link: '/search' }, // Añadido link para Filters
 ];
 
 const CategoryButtons: React.FC = () => {
@@ -28,15 +27,14 @@ const CategoryButtons: React.FC = () => {
           </button>
         ))}
       </div>
-      {/* Segunda fila - Los últimos 2 botones que ocupan más espacio */}
-      <div className="grid grid-cols-2 gap-4">
+      {/* Segunda fila - El último botón que ocupa más espacio */}
+      <div className="grid grid-cols-1 gap-4">
         {categories.slice(6).map((category, index) => {
-          // Si el botón tiene una propiedad "link", lo hacemos con <Link>
           if (category.link) {
             return (
               <Link
                 key={index}
-                to={category.link}
+                to={category.link ?? "/search"} // Asegurar que 'to' siempre tenga un valor predeterminado
                 className="flex items-center justify-center p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
               >
                 <category.icon className="w-6 h-6 mr-2" />

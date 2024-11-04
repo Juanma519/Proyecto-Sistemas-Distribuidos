@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +22,14 @@ const Login: React.FC = () => {
       if (response.ok) {
         const data = await response.json();
         alert(`Login exitoso: ${data.message}, Tipo de usuario: ${data.tipo}`);
-        // Puedes también redirigir al usuario dependiendo de si es cliente o psicólogo
+        
+        // Guardar datos de sesión en localStorage
+        localStorage.setItem('userType', data.tipo);
+        localStorage.setItem('userId', data.body.id);
+        localStorage.setItem('userData', JSON.stringify(data.body));
+
+        // Redirigir al usuario al dashboard principal
+        navigate('/');
       } else {
         alert('Usuario o contraseña incorrectos');
       }
@@ -70,12 +78,6 @@ const Login: React.FC = () => {
           >
             Iniciar
           </button>
-          <Link
-            className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-            to="/register"
-          >
-            Crear una cuenta
-          </Link>
         </div>
       </form>
     </div>
@@ -83,3 +85,4 @@ const Login: React.FC = () => {
 };
 
 export default Login;
+

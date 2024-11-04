@@ -3,6 +3,7 @@ import { request, gql } from 'graphql-request';
 import { Link } from 'react-router-dom';
 
 interface Psicologo {
+  id: number; // Cambiado a number para representar el ID numérico
   username: string;
   mail: string;
   nombre: string;
@@ -17,7 +18,7 @@ interface FiltroPsicologoResponse {
 }
 
 interface PsicologoData {
-  id: string;
+  id: number; // Cambiado a number
   name: string;
   especialidad: string;
   ubicacion: string;
@@ -36,6 +37,7 @@ const BuscarPsicologos: React.FC = () => {
     const query = gql`
       query ($especialidad: String, $ubicacion: String!) {
         filtroPsicologo(especialidad: $especialidad, ubicacion: $ubicacion) {
+          id
           username
           mail
           nombre
@@ -55,7 +57,7 @@ const BuscarPsicologos: React.FC = () => {
     try {
       const data = await request<FiltroPsicologoResponse>(endpoint, query, variables);
       const psicologosData: PsicologoData[] = data.filtroPsicologo.map((psicologo) => ({
-        id: psicologo.username, // Usamos 'username' como identificador único
+        id: psicologo.id, // Ahora estamos usando el ID numérico correcto
         name: `${psicologo.nombre} ${psicologo.apellido}`,
         especialidad: psicologo.especialidad,
         ubicacion: psicologo.ubicacion,
@@ -70,100 +72,101 @@ const BuscarPsicologos: React.FC = () => {
   };
 
   return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Sección de filtros */}
-        <div className="my-6">
-          <h2 className="text-2xl font-semibold mb-4">Buscar Psicólogos</h2>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Sección de filtros */}
+      <div className="my-6">
+        <h2 className="text-2xl font-semibold mb-4">Buscar Psicólogos</h2>
 
-          {/* Selector de Especialidad */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Especialidad</label>
-            <select
-                value={especialidad}
-                onChange={(e) => setEspecialidad(e.target.value)}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-            >
-              <option value="">-- Sin filtro de especialidad --</option>
-              <option value="Duelos">Duelos</option>
-              <option value="Traumas">Traumas</option>
-              <option value="Familiar">Familiar</option>
-              <option value="Pareja">Pareja</option>
-              <option value="Separación y Divorcio">Separación y Divorcio</option>
-              <option value="Infantil y Adolescente">Infantil y Adolescente</option>
-            </select>
-          </div>
-
-          {/* Campo de entrada para la ubicación */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">Ubicación</label>
-            <input
-                type="text"
-                value={ubicacion}
-                onChange={(e) => setUbicacion(e.target.value)}
-                className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
-                placeholder="Ingresa la ubicación"
-            />
-          </div>
-
-          {/* Botón de búsqueda */}
-          <div className="mt-4">
-            <button
-                onClick={fetchPsicologos}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-            >
-              Buscar
-            </button>
-          </div>
+        {/* Selector de Especialidad */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Especialidad</label>
+          <select
+            value={especialidad}
+            onChange={(e) => setEspecialidad(e.target.value)}
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+          >
+            <option value="">-- Sin filtro de especialidad --</option>
+            <option value="Duelos">Duelos</option>
+            <option value="Traumas">Traumas</option>
+            <option value="Familiar">Familiar</option>
+            <option value="Pareja">Pareja</option>
+            <option value="Separación y Divorcio">Separación y Divorcio</option>
+            <option value="Infantil y Adolescente">Infantil y Adolescente</option>
+          </select>
         </div>
 
-        {/* Resultados de la búsqueda */}
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold">Resultados de la búsqueda</h2>
+        {/* Campo de entrada para la ubicación */}
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Ubicación</label>
+          <input
+            type="text"
+            value={ubicacion}
+            onChange={(e) => setUbicacion(e.target.value)}
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+            placeholder="Ingresa la ubicación"
+          />
         </div>
 
-        {/* Lista de psicólogos */}
-        <div className="space-y-6">
-          {psicologos.length > 0 ? (
-              psicologos.map((psicologo) => (
-                  <div key={psicologo.id} className="bg-white rounded-lg shadow-md p-6">
-                    <div className="flex">
-                      <img
-                          src="URL_DE_IMAGEN_POR_DEFECTO"
-                          alt={psicologo.name}
-                          className="w-32 h-32 object-cover rounded-lg mr-6"
-                      />
-                      <div className="flex-grow">
-                        <h3 className="text-xl font-semibold">{psicologo.name}</h3>
-                        <p className="text-sm text-gray-600">{psicologo.ubicacion}</p>
-                        <p className="text-sm text-gray-600">
-                          {psicologo.email} • {psicologo.telefono}
-                        </p>
-                        <div className="mt-4">
-                          <p className="text-sm">
-                            <strong>Especialidad:</strong> {psicologo.especialidad}
-                          </p>
-                        </div>
-                        {/* Botón Ver Perfil */}
-                        <div className="mt-4">
-                          <Link
-                              to={`/therapist/${psicologo.id}`}
-                              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-                          >
-                            Ver Perfil
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-              ))
-          ) : (
-              <p className="text-gray-500">
-                No se encontraron psicólogos para los filtros aplicados.
-              </p>
-          )}
+        {/* Botón de búsqueda */}
+        <div className="mt-4">
+          <button
+            onClick={fetchPsicologos}
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+          >
+            Buscar
+          </button>
         </div>
       </div>
+
+      {/* Resultados de la búsqueda */}
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold">Resultados de la búsqueda</h2>
+      </div>
+
+      {/* Lista de psicólogos */}
+      <div className="space-y-6">
+        {psicologos.length > 0 ? (
+          psicologos.map((psicologo) => (
+            <div key={psicologo.id} className="bg-white rounded-lg shadow-md p-6">
+              <div className="flex">
+                <img
+                  src="URL_DE_IMAGEN_POR_DEFECTO"
+                  alt={psicologo.name}
+                  className="w-32 h-32 object-cover rounded-lg mr-6"
+                />
+                <div className="flex-grow">
+                  <h3 className="text-xl font-semibold">{psicologo.name}</h3>
+                  <p className="text-sm text-gray-600">{psicologo.ubicacion}</p>
+                  <p className="text-sm text-gray-600">
+                    {psicologo.email} • {psicologo.telefono}
+                  </p>
+                  <div className="mt-4">
+                    <p className="text-sm">
+                      <strong>Especialidad:</strong> {psicologo.especialidad}
+                    </p>
+                  </div>
+                  {/* Botón Ver Perfil */}
+                  <div className="mt-4">
+                    <Link
+                      to={`/therapist/${psicologo.id}`} // Ahora usamos el ID numérico aquí
+                      className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+                    >
+                      Ver Perfil
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500">
+            No se encontraron psicólogos para los filtros aplicados.
+          </p>
+        )}
+      </div>
+    </div>
   );
 };
 
 export default BuscarPsicologos;
+

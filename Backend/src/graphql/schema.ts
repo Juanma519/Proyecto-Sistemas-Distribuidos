@@ -1,19 +1,18 @@
-
-import { GraphQLSchema } from 'graphql'
-import {Psicologo, User} from '../tipos/tipos'
-import { pool } from '../pool'
-import { QueryResult } from 'pg'
+import { GraphQLSchema } from 'graphql';
+import { Psicologo } from '../tipos/tipos';
 import {
     psicologosUbicacion,
     psicologosEspecialidad,
     psicologosUbicacionEspecialidad,
-    obtenerTodosLosPsicologos, getPsicologoByUsername
-} from '../consultasDB'
-const {buildSchema} = require('graphql')
+    obtenerTodosLosPsicologos,
+    getPsicologoById // Asegúrate de importar `getPsicologoById` aquí.
+} from '../consultasDB';
+const { buildSchema } = require('graphql');
 
 // Esquema GraphQL actualizado
 export const esquema: GraphQLSchema = buildSchema(`
     type Psicologo {
+        id: ID!
         username: String!
         password: String!
         mail: String!
@@ -22,31 +21,50 @@ export const esquema: GraphQLSchema = buildSchema(`
         telefono: String!
         especialidad: String!
         ubicacion: String!
+        descripcion: String!
+        reviews: Int
     }
     type Query {
         filtroPsicologo(especialidad: String, ubicacion: String): [Psicologo]
-        getPsicologo(username: String!): Psicologo
+        getPsicologo(id: ID!): Psicologo
     }
 `);
 
+// Actualización de los resolvers
 export const resolvers = {
     filtroPsicologo: async (args: { especialidad?: string; ubicacion?: string }) => {
         const { especialidad, ubicacion } = args;
-        if (ubicacion && especialidad) {
-            return psicologosUbicacionEspecialidad(ubicacion, especialidad);
+        try {
+            if (ubicacion && especialidad) {
+                return await psicologosUbicacionEspecialidad(ubicacion, especialidad);
+            }
+            if (especialidad) {
+                return await psicologosEspecialidad(especialidad);
+            }
+            if (ubicacion) {
+                return await psicologosUbicacion(ubicacion);
+            }
+            // Si no se proporcionan argumentos, devuelve todos los psicólogos
+            return await obtenerTodosLosPsicologos();
+        } catch (error) {
+            console.error("Error en filtroPsicologo:", error);
+            throw new Error("No se pudo filtrar a los psicólogos");
         }
-        if (especialidad) {
-            return psicologosEspecialidad(especialidad);
-        }
-        if (ubicacion) {
-            return psicologosUbicacion(ubicacion);
-        }
-        // Si no se proporcionan argumentos, devuelve todos los psicólogos
-        return obtenerTodosLosPsicologos();
     },
-    getPsicologo: async ({ username }: { username: string }) => {
-        return getPsicologoByUsername(username);
+    getPsicologo: async (args: { id: string }) => {
+        try {
+            // Utiliza `getPsicologoById` en lugar de `getPsicologoByUsername`
+            const psicologo = await getPsicologoById(parseInt(args.id));
+            if (!psicologo) {
+                throw new Error("Psicólogo no encontrado");
+            }
+            return psicologo;
+        } catch (error) {
+            console.error("Error en getPsicologo:", error);
+            throw new Error("No se pudo obtener al psicólogo");
+        }
     },
 };
+
 
 
