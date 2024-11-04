@@ -12,7 +12,7 @@ const Header: React.FC = () => {
         </Link>
         <nav>
           <ul className="flex space-x-4">
-            <li><Link to="/search" className="hover:text-gray-300">Encuentra un terapeuta</Link></li>
+            <li><Link to="/search" className="hover:text-gray-300">Encontrar terapeuta</Link></li>
             <li><Link to="#" className="hover:text-gray-300">Ayuda</Link></li>
             <li><Link to="/login" className="bg-white text-gray-900 px-4 py-2 rounded-md hover:bg-gray-200">Iniciar Sesión</Link></li>
           </ul>

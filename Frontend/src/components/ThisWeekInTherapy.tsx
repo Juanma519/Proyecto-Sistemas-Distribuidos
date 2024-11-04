@@ -4,8 +4,8 @@ import { UserCheck, Users, Calendar, BarChart } from 'lucide-react';
 const therapyItems = [
   {
     icon: UserCheck,
-    title: 'Find a Therapist',
-    description: 'Discover your perfect match',
+    title: 'Encontrar un terapeuta',
+    description: 'Descubre tu match perfecto',
   },
   {
     icon: Users,
@@ -27,7 +27,7 @@ const therapyItems = [
 const ThisWeekInTherapy: React.FC = () => {
   return (
     <div className="mb-8">
-      <h2 className="text-2xl font-bold mb-4">This week in Therapy</h2>
+      <h2 className="text-2xl font-bold mb-4">Terapias en esta semana</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {therapyItems.map((item, index) => (
           <div key={index} className="bg-white rounded-lg shadow-md p-4">

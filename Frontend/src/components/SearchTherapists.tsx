@@ -146,7 +146,7 @@ const BuscarPsicologos: React.FC = () => {
                         {/* Botón Ver Perfil */}
                         <div className="mt-4">
                           <Link
-                              to={`/psicologo/${psicologo.id}`}
+                              to={`/therapist/${psicologo.id}`}
                               className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
                           >
                             Ver Perfil
