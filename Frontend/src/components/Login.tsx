@@ -78,6 +78,13 @@ const Login: React.FC = () => {
           >
             Iniciar
           </button>
+          <button
+            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="button"
+            onClick={() => navigate('/register')}
+          >
+            Registrarse
+          </button>
         </div>
       </form>
     </div>
