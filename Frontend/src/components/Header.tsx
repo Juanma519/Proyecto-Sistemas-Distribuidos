@@ -46,7 +46,8 @@ const Header: React.FC = () => {
             {userType && (
               <>
                 <li>
-                  <Link to="/messages" className="flex items-center hover:text-gray-300">
+                  {/* Redirigir a la página de mensajes */}
+                  <Link to={`/chat/${userId}`} className="flex items-center hover:text-gray-300">
                     <MessageSquare className="w-5 h-5 mr-1" />
                     Mensajes
                   </Link>
