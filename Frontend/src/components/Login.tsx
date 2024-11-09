@@ -25,7 +25,8 @@ const Login: React.FC = () => {
         
         // Guardar datos de sesión en localStorage
         localStorage.setItem('userType', data.tipo);
-        localStorage.setItem('userId', data.body.id);
+        localStorage.setItem('userId', data.body.id); // Almacena el ID del usuario
+        localStorage.setItem('username', data.body.username); // Almacena el username del usuario
         localStorage.setItem('userData', JSON.stringify(data.body));
 
         // Redirigir al usuario al dashboard principal
@@ -92,4 +93,5 @@ const Login: React.FC = () => {
 };
 
 export default Login;
+
 

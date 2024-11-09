@@ -6,25 +6,25 @@ export const loginUsuario = async (req: Request, res: Response) => {
 
     try {
         // Primero verificamos si el usuario es un cliente
-        let response = await pool.query("SELECT * FROM clientes WHERE mail = $1 AND password = $2", [mail, password]);
+        let response = await pool.query("SELECT id, username FROM clientes WHERE mail = $1 AND password = $2", [mail, password]);
         
         if (response.rows.length === 1) {
             res.status(200).json({
                 "message": "Cliente validado",
                 "tipo": "cliente",
-                "body": response.rows[0]
+                "body": response.rows[0] // Contiene id y username
             });
             return;
         }
 
         // Si no es cliente, verificamos si es psicólogo
-        response = await pool.query("SELECT * FROM psicologos WHERE mail = $1 AND password = $2", [mail, password]);
+        response = await pool.query("SELECT id, username FROM psicologos WHERE mail = $1 AND password = $2", [mail, password]);
         
         if (response.rows.length === 1) {
             res.status(200).json({
                 "message": "Psicólogo validado",
                 "tipo": "psicologo",
-                "body": response.rows[0]
+                "body": response.rows[0] // Contiene id y username
             });
             return;
         }

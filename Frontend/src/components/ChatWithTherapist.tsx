@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Importación necesaria para los enlaces
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { io } from 'socket.io-client';
+
+// Inicializar la conexión de Socket.io
+const socket = io("http://localhost:5001");
 
 interface Chat {
   id: number;
@@ -28,24 +32,81 @@ const ChatWithTherapist: React.FC = () => {
   const [showSearchBar, setShowSearchBar] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [therapists, setTherapists] = useState<Therapist[]>([]);
-  const [chats, setChats] = useState<Chat[]>([
-    { id: 1, name: 'Dr. Emily Watson', lastMessage: 'Can we reschedule?' },
-    { id: 2, name: 'Dr. Michael Scott', lastMessage: 'Thank you for the update.' },
-    { id: 3, name: 'Dr. Olivia Martinez', lastMessage: 'Looking forward to our session.' },
-  ]);
+  const [chats, setChats] = useState<Chat[]>([]);
+
+  const username = localStorage.getItem('username') || 'Usuario';
+  const userType = localStorage.getItem('userType') || 'cliente'; // Obtener el tipo de usuario del localStorage
+
+  useEffect(() => {
+    // Identificar al usuario con el socket usando el username
+    if (username) {
+      socket.emit("identify", username);
+    }
+
+    socket.on("receiveMessage", (message: Message) => {
+      // Evitar duplicados verificando si el mensaje ya está en la lista
+      setMessages((prevMessages) => {
+        if (prevMessages.some((msg) => msg.id === message.id)) {
+          return prevMessages; // No añadir el mensaje si ya existe
+        }
+        return [...prevMessages, message];
+      });
+    });
+
+    socket.on("newChatCreated", (newChat: Chat) => {
+      setChats((prevChats) => {
+        if (!prevChats.find(chat => chat.id === newChat.id)) {
+          return [...prevChats, newChat];
+        }
+        return prevChats;
+      });
+    });
+
+    // Obtener chats cuando el componente se monte
+    obtenerChats();
+
+    return () => {
+      socket.off("receiveMessage");
+      socket.off("newChatCreated");
+    };
+  }, [username, userType]);
+
+  const obtenerChats = async () => {
+    try {
+      const response = await fetch(`http://localhost:5001/obtenerChats?username=${username}&userType=${userType}`);
+      if (response.ok) {
+        const data = await response.json();
+        setChats(data.chats);
+      } else {
+        console.error("Error al obtener los chats");
+      }
+    } catch (error) {
+      console.error("Error al obtener los chats:", error);
+    }
+  };
 
   const handleSelectChat = (id: number) => {
+    if (!id) {
+      console.error("Chat ID is undefined");
+      return;
+    }
     setSelectedChat(id);
     setShowSearchBar(false);
-    setMessages([
-      { id: 1, sender: 'User', content: 'Hi Dr. Watson, I wanted to discuss our last session...' },
-      { id: 2, sender: 'Dr. Watson', content: 'Of course, let’s talk about it. What are your main concerns?' },
-    ]);
+
+    // Unirse al chat en tiempo real
+    socket.emit("joinChat", { chatId: id });
+
+    // Cargar mensajes desde el servidor
+    fetch(`http://localhost:5001/obtenerMensajes/${id}`)
+      .then(response => response.json())
+      .then(data => setMessages(data.mensajes || []))
+      .catch(error => console.error("Error al cargar mensajes:", error));
   };
 
   const handleSendMessage = () => {
-    if (inputValue.trim() !== '') {
-      setMessages([...messages, { id: messages.length + 1, sender: 'User', content: inputValue }]);
+    if (inputValue.trim() !== '' && selectedChat) {
+      // Enviar mensaje al servidor
+      socket.emit("sendMessage", { chatId: selectedChat, senderUsername: username, content: inputValue });
       setInputValue('');
     }
   };
@@ -61,17 +122,10 @@ const ChatWithTherapist: React.FC = () => {
     }
 
     try {
-      // Realizar la solicitud al servidor para buscar psicólogos en la base de datos
-      const response = await fetch(`http://localhost:5001/filtrarPsicologos?search=${searchTerm}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
+      const response = await fetch(`http://localhost:5001/filtrarPsicologos?search=${searchTerm}`);
       if (response.ok) {
         const data = await response.json();
-        setTherapists(data.data); // Almacenar los resultados en el estado
+        setTherapists(data.data);
       } else {
         alert('No se encontraron resultados');
       }
@@ -81,14 +135,33 @@ const ChatWithTherapist: React.FC = () => {
     }
   };
 
-  const handleStartChatFromSearch = (therapist: Therapist) => {
-    const newChat = {
-      id: chats.length + 1,
-      name: `${therapist.nombre} ${therapist.apellido}`,
-      lastMessage: 'Chat iniciado',
-    };
-    setChats((prevChats) => [...prevChats, newChat]);
-    handleSelectChat(newChat.id);
+  const handleStartChatFromSearch = async (therapist: Therapist) => {
+    if (!username || !therapist.id) {
+      alert("Error: usuario o terapeuta no definido.");
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5001/createChat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clienteUsername: username, psicologoId: therapist.id }),
+      });
+
+      if (response.ok) {
+        const newChat = await response.json();
+
+        setChats((prevChats) => [...prevChats, { id: newChat.chatId, name: `${therapist.nombre} ${therapist.apellido}`, lastMessage: "" }]);
+        handleSelectChat(newChat.chatId);
+      } else {
+        const errorData = await response.json();
+        console.error('Error al crear el chat:', errorData);
+        alert(`Error al crear el chat: ${errorData.error}`);
+      }
+    } catch (error) {
+      console.error('Error al iniciar el chat:', error);
+      alert('Hubo un problema al intentar iniciar el chat');
+    }
   };
 
   return (
@@ -116,7 +189,6 @@ const ChatWithTherapist: React.FC = () => {
                 Buscar
               </button>
             </div>
-            {/* Mostrar los resultados de la búsqueda */}
             <div style={styles.searchResultsContainer}>
               {therapists.length > 0 ? (
                 therapists.map((therapist) => (
@@ -131,10 +203,7 @@ const ChatWithTherapist: React.FC = () => {
                       >
                         Iniciar Chat
                       </button>
-                      <Link
-                        to={`/therapist/${therapist.id}`}
-                        style={styles.viewProfileButton}
-                      >
+                      <Link to={`/therapist/${therapist.id}`} style={styles.viewProfileButton}>
                         Ver Perfil
                       </Link>
                     </div>
@@ -165,15 +234,12 @@ const ChatWithTherapist: React.FC = () => {
       <div style={styles.chatArea}>
         {selectedChat ? (
           <>
-            {/* Chat Header */}
             <div style={styles.chatHeader}>
               <h3>Conversación con {chats.find((chat) => chat.id === selectedChat)?.name}</h3>
             </div>
-
-            {/* Chat Messages */}
             <div style={styles.messagesContainer}>
               {messages.map((message) => {
-                const isUser = message.sender === 'User';
+                const isUser = message.sender === username;
                 return (
                   <div
                     key={message.id}
@@ -188,8 +254,6 @@ const ChatWithTherapist: React.FC = () => {
                 );
               })}
             </div>
-
-            {/* Chat Input */}
             <div style={styles.inputContainer}>
               <input
                 type="text"
@@ -382,9 +446,3 @@ const styles = {
 };
 
 export default ChatWithTherapist;
-
-
-
-
-
-

@@ -12,7 +12,7 @@ const TherapistDetails: React.FC = () => {
   const [isWritingReview, setIsWritingReview] = useState<boolean>(false);
   const [isEditingDescription, setIsEditingDescription] = useState<boolean>(false);
   const [newDescription, setNewDescription] = useState<string>('');
-  const reviewFormRef = useRef<HTMLDivElement | null>(null); // Ref para el formulario de reseña
+  const reviewFormRef = useRef<HTMLDivElement | null>(null);
   const userType = localStorage.getItem('userType');
   const userId = localStorage.getItem('userId');
 
@@ -89,7 +89,7 @@ const TherapistDetails: React.FC = () => {
     setIsWritingReview(true);
     setTimeout(() => {
       reviewFormRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, 100); // Delay pequeño para asegurarse de que el formulario se monte antes de desplazar
+    }, 100);
   };
 
   const handleEditDescription = () => {
@@ -134,6 +134,8 @@ const TherapistDetails: React.FC = () => {
     return <p>No se encontró el terapeuta</p>;
   }
 
+  const isOwnProfile = userType === 'psicologo' && userId === id;
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -170,7 +172,7 @@ const TherapistDetails: React.FC = () => {
               ) : (
                 <div className="flex items-center">
                   <p className="text-gray-500">{therapist.descripcion}</p>
-                  {userType === 'psicologo' && userId === id && (
+                  {isOwnProfile && (
                     <button
                       onClick={handleEditDescription}
                       className="ml-4 text-blue-500 hover:text-blue-600"
@@ -201,26 +203,28 @@ const TherapistDetails: React.FC = () => {
             <DollarSign className="h-5 w-5 text-gray-400 mr-2" />
             <span>${therapist.price} por sesión</span>
           </div>
-          <div className="mt-4 flex space-x-4">
-            <Link
-              to={`/chat/${therapist.id}`}
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded inline-flex items-center"
-            >
-              <MessageCircle className="h-5 w-5 mr-2" />
-              Chat con {therapist.nombre} {therapist.apellido}
-            </Link>
-            <button 
-              className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
-            >
-              Agendar Consulta
-            </button>
-            <button 
-              className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
-              onClick={handleWriteReviewClick}
-            >
-              Escribir Reseña
-            </button>
-          </div>
+          {!isOwnProfile && (
+            <div className="mt-4 flex space-x-4">
+              <Link
+                to={`/chat/${therapist.id}`}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded inline-flex items-center"
+              >
+                <MessageCircle className="h-5 w-5 mr-2" />
+                Chat con {therapist.nombre} {therapist.apellido}
+              </Link>
+              <button 
+                className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+              >
+                Agendar Consulta
+              </button>
+              <button 
+                className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
+                onClick={handleWriteReviewClick}
+              >
+                Escribir Reseña
+              </button>
+            </div>
+          )}
         </div>
         <div className="px-8 py-4">
           <h2 className="text-xl font-semibold text-gray-800">Reseñas</h2>
@@ -287,4 +291,3 @@ const TherapistDetails: React.FC = () => {
 };
 
 export default TherapistDetails;
-
