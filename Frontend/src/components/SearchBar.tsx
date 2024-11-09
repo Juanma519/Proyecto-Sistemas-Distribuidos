@@ -7,6 +7,13 @@ const SearchBar: React.FC = () => {
   const [results, setResults] = useState<any[]>([]); // Estado para los resultados de la búsqueda
   const [hasSearched, setHasSearched] = useState(false); // Estado para controlar si se ha realizado una búsqueda
 
+  // Función para limpiar los resultados
+  const clearResults = () => {
+    setResults([]);
+    setHasSearched(false);
+    setSearchTerm(''); // Opcional: limpiar el término de búsqueda
+  };
+
   const handleSearch = async () => {
     if (searchTerm.trim() === '') {
       alert('Por favor ingrese un nombre para buscar');
@@ -29,10 +36,12 @@ const SearchBar: React.FC = () => {
         setResults(data.data); // Almacenar los resultados en el estado
       } else {
         alert('No se encontraron resultados');
+        setResults([]);
       }
     } catch (error) {
       console.error('Error durante la búsqueda:', error);
       alert('Hubo un problema al intentar buscar');
+      setResults([]);
     }
   };
 
@@ -55,6 +64,18 @@ const SearchBar: React.FC = () => {
           Buscar
         </button>
       </div>
+
+      {/* Botón para ocultar los resultados */}
+      {results.length > 0 && (
+        <div className="mt-4">
+          <button
+            onClick={clearResults}
+            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+          >
+            Ocultar Psicólogos
+          </button>
+        </div>
+      )}
 
       {/* Mostrar los resultados de la búsqueda */}
       {hasSearched && (
@@ -87,4 +108,3 @@ const SearchBar: React.FC = () => {
 };
 
 export default SearchBar;
-
